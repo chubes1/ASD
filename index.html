@@ -5,12 +5,16 @@
     <title>Le Sampler</title>
     <script src="js/sampler.js"></script>
     <link rel="stylesheet" href="css/style.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 </head>
 <body>
 <label for="audioFileChooser">Upload an audio file: </label><br><br>
 <input  id="audioFileChooser" type="file" onchange="readFile(this.files);">
+<label for="audioFileChooser">Choose File..</label>
+<div id="playback">
 <button id="play">Play</button>
 <button id="stop">Stop</button>
+</div>
 <input id="detune_Audio" type="range" min="-1200" max="1200" step="1" value="0"
 
 </body>

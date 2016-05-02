@@ -1,0 +1,66 @@
+#audioFileChooser {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+#audioFileChooser + label {
+    margin:20px;
+    padding:15px;
+    background-color:red;
+    color:white;
+    border-radius: 2px;
+    font-family: "Raleway";
+    transition: background .25s ease-in-out;
+    -moz-transition: background .25s ease-in-out;
+    -webkit-transition: background .25s ease-in-out;
+}
+
+#audioFileChooser +label:hover {
+    background:black;
+}
+
+#playback {
+    padding:10px;
+}
+
+#detune_Audio {
+    padding:10px;
+}
+
+#play {
+    margin: 10px;
+    border-radius: 2px;
+    padding: 10px 20px 10px 20px;
+    background-color:red;
+    border: 0px;
+    color: white;
+    font-family: "Raleway";
+    transition: background .25s ease-in-out;
+    -moz-transition: background .25s ease-in-out;
+    -webkit-transition: background .25s ease-in-out;
+}
+
+#play:hover {
+    background: black;
+}
+
+#stop {
+    margin: 10px;
+    border-radius: 2px;
+    padding: 10px 20px 10px 20px;
+    background-color:red;
+    border: 0px;
+    color: white;
+    font-family: "Raleway";
+    transition: background .25s ease-in-out;
+    -moz-transition: background .25s ease-in-out;
+    -webkit-transition: background .25s ease-in-out;
+}
+
+#stop:hover {
+    background: black;
+}
