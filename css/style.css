@@ -131,6 +131,7 @@ body {
 .slider {
     position: absolute;
     cursor: pointer;
+    border-radius: 2px;
     top: 0;
     left: 0;
     right: 0;

@@ -6,7 +6,12 @@ var context = new (window.AudioContext || window.webkitAudioContext)(),
     LFOGain = context.createGain(),
     fileReader = new FileReader(),
     audio,
-    LFO = context.createOscillator();
+    LFO = context.createOscillator(),
+    play_Track,
+    stop_Track,
+    detune_Audio,
+    detune_Audio_Value;
+
 
 dryGain.gain.value = 1;
 wetGain.gain.value = 0;
@@ -21,14 +26,13 @@ LFO.type = 'sine';
 LFO.frequency.value = 0.1;
 LFO.start();
 LFO.connect(LFOGain);
-LFOGain.connect(masterGain.gain);
 
 function readAudioFile(files) {
     fileReader.readAsArrayBuffer(files[0]);
     fileReader.onload = function (e) {
         playAudioFile(e.target.result);
         audio = fileReader.result;
-        document.getElementById('play').disabled=false;
+        play_Track.disabled=false;
         console.log(("Filename: '" + files[0].name + "'"), ( "(" + ((Math.floor(files[0].size / 1024 / 1024 * 100)) / 100) + " MB)" ));
     }
 }
@@ -44,29 +48,39 @@ function readAudioFile(files) {
  }
 
 window.onload = function() {
-    document.getElementById('play').disabled=true;
-    document.getElementById('stop').disabled=true;
-    document.getElementById('detune_Audio').disabled=true;
-    document.getElementById('play').addEventListener('click', start_Audio);
-    document.getElementById('stop').addEventListener('click', stop_Audio);
-    document.getElementById('detune_Audio').addEventListener('input', function(){
+    play_Track = document.getElementById('play');
+    stop_Track = document.getElementById('stop');
+    detune_Audio = document.getElementById('detune_Audio');
+    detune_Audio_Value = document.getElementById('detune_Audio_Value');
+    var
+        reverb_Amount = document.getElementById('reverb_Amount'),
+        LFO_Rate = document.getElementById('LFO_Rate'),
+        LFO_Wave_Type = document.getElementById('LFO_Wave_Type'),
+        LFO_State = document.getElementById('LFO_State');
+
+    play_Track.disabled=true;
+    stop_Track.disabled=true;
+    detune_Audio.disabled=true;
+    play_Track.addEventListener('click', start_Audio);
+    stop_Track.addEventListener('click', stop_Audio);
+    detune_Audio.addEventListener('input', function(){
         source.detune.value = this.value*100;
-        document.querySelector('#detune_Audio_Value').value = this.value + " Semitones";
+        detune_Audio_Value.value = this.value + " Semitones";
     });
-    document.getElementById('reverb_Amount').addEventListener('input', function(){
+    reverb_Amount.addEventListener('input', function(){
         dryGain.gain.value = 1 - this.value/100;
         wetGain.gain.value = this.value/100;
         document.querySelector('#reverb_Amount_Value').value = this.value + "%";
     });
-    document.getElementById('LFO_Rate').addEventListener('input', function(){
+    LFO_Rate.addEventListener('input', function(){
         LFO.frequency.value = this.value;
         document.querySelector('#LFO_Rate_Hz').value = this.value + "Hz";
     });
-    document.getElementById('LFO_Wave_Type').addEventListener('change', function(){
+    LFO_Wave_Type.addEventListener('change', function(){
         LFO.type = this.value;
         console.log(LFO.type);
     });
-    document.getElementById('LFO_State').onclick = function(){
+    LFO_State.onclick = function(){
         if (this.checked){
             LFOGain.connect(masterGain.gain);
         }
@@ -78,19 +92,19 @@ window.onload = function() {
 };
 function start_Audio() {
     source.start(0);
-    document.getElementById('play').disabled=true;
-    document.getElementById('stop').disabled=false;
-    document.getElementById('detune_Audio').disabled=false;
+    play_Track.disabled=true;
+    stop_Track.disabled=false;
+    detune_Audio.disabled=false;
 }
 
 function stop_Audio() {
     source.stop(0);
     playAudioFile(audio);
-    document.getElementById('stop').disabled=true;
-    document.getElementById('play').disabled=false;
-    document.getElementById('detune_Audio').disabled=true;
-    document.getElementById('detune_Audio').value = 0;
-    document.getElementById('detune_Audio_Value').value = 0 + " Semitones";
+    stop_Track.disabled=true;
+    play_Track.disabled=false;
+    detune_Audio.disabled=true;
+    detune_Audio.value = 0;
+    detune_Audio_Value.value = 0 + " Semitones";
 }
 
 var reverb = (function() {
