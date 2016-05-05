@@ -2,13 +2,26 @@ var context = new (window.AudioContext || window.webkitAudioContext)(),
     source,
     wetGain = context.createGain(),
     dryGain = context.createGain(),
+    masterGain = context.createGain(),
+    LFOGain = context.createGain(),
     fileReader = new FileReader(),
-    audio;
+    audio,
+    LFO = context.createOscillator();
 
-    dryGain.gain.value = 1;
-    wetGain.gain.value = 0;
-    wetGain.connect(context.destination);
-    dryGain.connect(context.destination);
+dryGain.gain.value = 1;
+wetGain.gain.value = 0;
+masterGain.gain.value = 0.5;
+LFOGain.gain.value = 0.5;
+
+wetGain.connect(masterGain);
+dryGain.connect(masterGain);
+masterGain.connect(context.destination);
+
+LFO.type = 'sine';
+LFO.frequency.value = 0.1;
+LFO.start();
+LFO.connect(LFOGain);
+LFOGain.connect(masterGain.gain);
 
 function readAudioFile(files) {
     fileReader.readAsArrayBuffer(files[0]);
@@ -45,6 +58,23 @@ window.onload = function() {
         wetGain.gain.value = this.value/100;
         document.querySelector('#reverb_Amount_Value').value = this.value + "%";
     });
+    document.getElementById('LFO_Rate').addEventListener('input', function(){
+        LFO.frequency.value = this.value;
+        document.querySelector('#LFO_Rate_Hz').value = this.value + "Hz";
+    });
+    document.getElementById('LFO_Wave_Type').addEventListener('change', function(){
+        LFO.type = this.value;
+        console.log(LFO.type);
+    });
+    document.getElementById('LFO_State').onclick = function(){
+        if (this.checked){
+            LFOGain.connect(masterGain.gain);
+        }
+        else {
+            LFOGain.disconnect(masterGain.gain);
+            masterGain.gain.value = 0.5;
+        }
+    };
 };
 function start_Audio() {
     source.start(0);
@@ -55,7 +85,6 @@ function start_Audio() {
 
 function stop_Audio() {
     source.stop(0);
-    convolver.disconnect();
     playAudioFile(audio);
     document.getElementById('stop').disabled=true;
     document.getElementById('play').disabled=false;
@@ -76,3 +105,4 @@ var reverb = (function() {
     convolver.buffer = noiseBuffer;
     return convolver;
 })();
+
