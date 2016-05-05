@@ -1,3 +1,14 @@
+body {
+    font-family: "Raleway";
+}
+
+.container {
+    display:inline-block;
+    border: solid 2px black;
+    border-radius: 10px;
+    padding: 20px;
+}
+
 #audioFileChooser {
     width: 0.1px;
     height: 0.1px;
@@ -13,13 +24,36 @@
     background-color:red;
     color:white;
     border-radius: 2px;
-    font-family: "Raleway";
     transition: background .25s ease-in-out;
     -moz-transition: background .25s ease-in-out;
     -webkit-transition: background .25s ease-in-out;
 }
 
-#audioFileChooser +label:hover {
+#audioFileChooser + label:hover {
+    background:black;
+}
+
+#impulseFileChooser {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+#impulseFileChooser + label {
+    margin:20px;
+    padding:15px;
+    background-color:green;
+    color:white;
+    border-radius: 2px;
+    transition: background .25s ease-in-out;
+    -moz-transition: background .25s ease-in-out;
+    -webkit-transition: background .25s ease-in-out;
+}
+
+#impulseFileChooser + label:hover {
     background:black;
 }
 
@@ -28,7 +62,11 @@
 }
 
 #detune_Audio {
-    padding:10px;
+    margin-left:20px;
+}
+
+#detune_Audio:disabled {
+
 }
 
 #play {
@@ -38,7 +76,6 @@
     background-color:red;
     border: 0px;
     color: white;
-    font-family: "Raleway";
     transition: background .25s ease-in-out;
     -moz-transition: background .25s ease-in-out;
     -webkit-transition: background .25s ease-in-out;
@@ -48,6 +85,10 @@
     background: black;
 }
 
+#play:disabled {
+    background: grey;
+}
+
 #stop {
     margin: 10px;
     border-radius: 2px;
@@ -55,7 +96,6 @@
     background-color:red;
     border: 0px;
     color: white;
-    font-family: "Raleway";
     transition: background .25s ease-in-out;
     -moz-transition: background .25s ease-in-out;
     -webkit-transition: background .25s ease-in-out;
@@ -63,4 +103,8 @@
 
 #stop:hover {
     background: black;
+}
+
+#stop:disabled {
+    background: grey;
 }
