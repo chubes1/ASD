@@ -9,23 +9,22 @@
 </head>
 <body>
 <div class="container">
-    <label for="audioFileChooser">Upload an audio file: </label><br><br>
+    <p id="upload">Upload Audio File:</p>
     <input  id="audioFileChooser" type="file" onchange="readAudioFile(this.files);" accept=".wav,.mp3">
     <label for="audioFileChooser">Choose File..</label><br><br>
-    <label for="impulseFileChooser">Upload an audio file: </label><br><br>
-    <input  id="impulseFileChooser" type="file" onchange="readImpulseFile(this.files);" accept=".wav,.mp3">
-    <label for="impulseFileChooser">Choose File..</label>
     <div id="playback">
         <button id="play">Play</button>
         <button id="stop">Stop</button>
     </div>
     <div class="detune_Audio_Slider">
-        <input id="detune_Audio" class="detune_Audio" type="range" min="-1200" max="1200" step="1" value="0">
+        <p>Pitch/Playback shifter</p>
+        <input id="detune_Audio" class="detune_Audio" type="range" min="-12" max="12" step="0.1" value="0">
         <output for="detune_Audio" id="detune_Audio_Value">0 Semitones</output>
     </div>
-    <div class="bitcrush_Amount_Slider">
-        <input id="bitcrush_Amount" class="bitcrush_Amount" type="range" min="0" max="1" step="0.01" value="1">
-        <output for="bitcrush_Amount" id="bitcrush_Amount_Value">1</output>
+    <div class="reverb_Amount_Slider">
+        <p>Reverb</p>
+        <input id="reverb_Amount" class="reverb_Amount" type="range" min="0" max="100" step="1" value="0">
+        <output for="reverb_Amount" id="reverb_Amount_Value">0%</output>
     </div>
 </div>
 
