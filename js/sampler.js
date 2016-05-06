@@ -4,6 +4,7 @@ var context = new (window.AudioContext || window.webkitAudioContext)(),
     dryGain = context.createGain(),
     masterGain = context.createGain(),
     LFOGain = context.createGain(),
+    pitchGain = context.createGain(),
     fileReader = new FileReader(),
     audio,
     LFO = context.createOscillator(),
@@ -89,6 +90,19 @@ window.onload = function() {
             masterGain.gain.value = 0.5;
         }
     };
+    document.getElementById('LFO_Target_Name').addEventListener('change', function(){
+       if (this.value === '1') {
+           console.log(this.value);
+           LFOGain.connect(masterGain.gain);
+       }
+        else if (this.value === '2'){
+           console.log(this.value);
+
+       }
+        else if (this.value === '3'){
+           console.log(this.value)
+       }
+    });
 };
 function start_Audio() {
     source.start(0);

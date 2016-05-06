@@ -166,3 +166,16 @@ input:checked + .slider:before {
     -ms-transform: translateX(26px);
     transform: translateX(26px);
 }
+
+#LFO_Target, #LFO_Wave {
+    display: inline-block;
+    padding: 10px;
+}
+
+.LFO_container {
+    vertical-align: top;
+    display:inline-block;
+    border: solid 2px black;
+    border-radius: 10px;
+    padding: 20px;
+}
