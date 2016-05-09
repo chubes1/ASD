@@ -40,30 +40,6 @@ LFO.frequency.value = 0.1;
 LFO.start();
 LFO.connect(LFOGain);
 
-function readAudioFile(files) {
-    fileReader.readAsArrayBuffer(files[0]);
-    fileReader.onload = function (e) {
-        playAudioFile(e.target.result);
-        audio = fileReader.result;
-        play_Track.disabled = false;
-        rec_Start.disabled  = false;
-        console.log(("Filename: '" + files[0].name + "'"), ( "(" + ((Math.floor(files[0].size / 1024 / 1024 * 100)) / 100) + " MB)" ));
-    }
-}
- function playAudioFile(file) {
-     source = context.createBufferSource();
-     context.decodeAudioData(file, function (buffer) {
-         source.buffer = buffer;
-         source.loop   = true;
-         mix(0);
-         source.connect(dryGain);
-         source.connect(reverb);
-         reverb.connect(wetGain);
-         masterGain.connect(recorder);
-         recorder.connect(context.destination);
-     });
- }
-
 window.onload = function() {
     initRec();
     play_Track             = document.getElementById('play');
@@ -140,10 +116,34 @@ window.onload = function() {
         record_Audio();
     });
     rec_Stop.addEventListener('click', function(){
-       stop_Record_Audio();
+        stop_Record_Audio();
     });
 
 };
+
+function readAudioFile(files) {
+    fileReader.readAsArrayBuffer(files[0]);
+    fileReader.onload = function (e) {
+        playAudioFile(e.target.result);
+        audio = fileReader.result;
+        play_Track.disabled = false;
+        rec_Start.disabled  = false;
+        console.log(("Filename: '" + files[0].name + "'"), ( "(" + ((Math.floor(files[0].size / 1024 / 1024 * 100)) / 100) + " MB)" ));
+    }
+}
+ function playAudioFile(file) {
+     source = context.createBufferSource();
+     context.decodeAudioData(file, function (buffer) {
+         source.buffer = buffer;
+         source.loop   = true;
+         mix(0);
+         source.connect(dryGain);
+         source.connect(reverb);
+         reverb.connect(wetGain);
+         masterGain.connect(recorder);
+         recorder.connect(context.destination);
+     });
+ }
 
 function start_Audio() {
     source.start(0);
@@ -168,11 +168,11 @@ function record_Audio() {
     start_Audio();
     stop_Track.disabled = true;
     isRecording         = true;
+    rec_Start.disabled  = true;
+    rec_Stop.disabled   = false;
     lChannel.length     = 0;
     rChannel.length     = 0;
     time_Recorded       = 0;
-    rec_Start.disabled  = true;
-    rec_Stop.disabled   = false;
 }
 
 function stop_Record_Audio(){
@@ -226,6 +226,17 @@ function initRec(){
     return recorder;
 }
 
+function mergeBuffers(channel, time_Recorded) {
+    var result = new Float32Array(time_Recorded);
+    var offset = 0;
+    var length = channel.length;
+    for (var i = 0; i < length; i++) {
+        result.set(channel[i], offset);
+        offset += channel[i].length;
+    }
+    return result;
+}
+
 function interleave(leftC, rightC) {
     var length     = leftC.length + rightC.length,
         result     = new Float32Array(length),
@@ -240,15 +251,17 @@ function interleave(leftC, rightC) {
     return result;
 }
 
-function mergeBuffers(channel, time_Recorded) {
-    var result = new Float32Array(time_Recorded);
-    var offset = 0;
-    var length = channel.length;
-    for (var i = 0; i < length; i++) {
-        result.set(channel[i], offset);
-        offset += channel[i].length;
+function writeString(view, offset, string) {
+    for (var i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
     }
-    return result;
+}
+
+function floatTo16BitPCM(output, offset, input) {
+    for (var i = 0; i < input.length; i++, offset += 2) {
+        var s = Math.max(-1, Math.min(1, input[i]));
+        output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+    }
 }
 
 function encodeWAV(samples) {
@@ -285,19 +298,6 @@ function encodeWAV(samples) {
     floatTo16BitPCM(view, 44, samples);
 
     return view;
-}
-
-function writeString(view, offset, string) {
-    for (var i = 0; i < string.length; i++) {
-        view.setUint8(offset + i, string.charCodeAt(i));
-    }
-}
-
-function floatTo16BitPCM(output, offset, input) {
-    for (var i = 0; i < input.length; i++, offset += 2) {
-        var s = Math.max(-1, Math.min(1, input[i]));
-        output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
-    }
 }
 
 function outputWAV(view) {
