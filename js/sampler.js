@@ -1,25 +1,23 @@
-var context = new (window.AudioContext || window.webkitAudioContext)(),
-    SR = context.sampleRate,
+var context              = new (window.AudioContext || window.webkitAudioContext)(),
+    SR                   = context.sampleRate,
+    wetGain              = context.createGain(),
+    dryGain              = context.createGain(),
+    masterGain           = context.createGain(),
+    LFOGain              = context.createGain(),
+    fileReader           = new FileReader(),
+    LFO                  = context.createOscillator(),
+    current_LFO_State    = masterGain.gain,
+    bufferSize           = 4096,
+    lChannel             = [],
+    rChannel             = [],
     source,
-    wetGain           = context.createGain(),
-    dryGain           = context.createGain(),
-    masterGain        = context.createGain(),
-    LFOGain           = context.createGain(),
-    pitchGain         = context.createGain(),
-    recorderOut       = context.createGain(),
-    fileReader        = new FileReader(),
     audio,
-    LFO               = context.createOscillator(),
     play_Track,
     stop_Track,
     detune_Audio,
     detune_Audio_Value,
     file_Chooser,
-    current_LFO_State = masterGain.gain,
-    bufferSize = 4096,
     recorder,
-    lChannel = [],
-    rChannel = [],
     isRecording,
     rec_Start,
     rec_Stop,
@@ -28,10 +26,10 @@ var context = new (window.AudioContext || window.webkitAudioContext)(),
     view;
 
 
-dryGain.gain.value      = 1;
-wetGain.gain.value      = 0;
-masterGain.gain.value   = 0.5;
-LFOGain.gain.value      = 0.5;
+dryGain.gain.value       = 1;
+wetGain.gain.value       = 0;
+masterGain.gain.value    = 0.5;
+LFOGain.gain.value       = 0.5;
 
 wetGain.connect(masterGain);
 dryGain.connect(masterGain);
@@ -47,8 +45,8 @@ function readAudioFile(files) {
     fileReader.onload = function (e) {
         playAudioFile(e.target.result);
         audio = fileReader.result;
-        play_Track.disabled=false;
-        rec_Start.disabled=false;
+        play_Track.disabled = false;
+        rec_Start.disabled  = false;
         console.log(("Filename: '" + files[0].name + "'"), ( "(" + ((Math.floor(files[0].size / 1024 / 1024 * 100)) / 100) + " MB)" ));
     }
 }
@@ -56,7 +54,7 @@ function readAudioFile(files) {
      source = context.createBufferSource();
      context.decodeAudioData(file, function (buffer) {
          source.buffer = buffer;
-         source.loop = true;
+         source.loop   = true;
          mix(0);
          source.connect(dryGain);
          source.connect(reverb);
@@ -68,32 +66,32 @@ function readAudioFile(files) {
 
 window.onload = function() {
     initRec();
-    play_Track = document.getElementById('play');
-    stop_Track = document.getElementById('stop');
-    rec_Start = document.getElementById('rec_Start');
-    rec_Stop = document.getElementById('rec_Stop');
-    file_Chooser = document.getElementById('audioFileChooser');
-    detune_Audio = document.getElementById('detune_Audio');
-    detune_Audio_Value = document.getElementById('detune_Audio_Value');
+    play_Track             = document.getElementById('play');
+    stop_Track             = document.getElementById('stop');
+    rec_Start              = document.getElementById('rec_Start');
+    rec_Stop               = document.getElementById('rec_Stop');
+    file_Chooser           = document.getElementById('audioFileChooser');
+    detune_Audio           = document.getElementById('detune_Audio');
+    detune_Audio_Value     = document.getElementById('detune_Audio_Value');
     var
-        reverb_Amount = document.getElementById('reverb_Amount'),
-        LFO_Rate = document.getElementById('LFO_Rate'),
-        LFO_Wave_Type = document.getElementById('LFO_Wave_Type'),
-        LFO_State = document.getElementById('LFO_State'),
-        LFO_Target = document.getElementById('LFO_Target_Name');
+        reverb_Amount      = document.getElementById('reverb_Amount'),
+        LFO_Rate           = document.getElementById('LFO_Rate'),
+        LFO_Wave_Type      = document.getElementById('LFO_Wave_Type'),
+        LFO_State          = document.getElementById('LFO_State'),
+        LFO_Target         = document.getElementById('LFO_Target_Name');
 
-    play_Track.disabled=true;
-    stop_Track.disabled=true;
-    rec_Start.disabled=true;
-    rec_Stop.disabled=true;
-    detune_Audio.disabled=true;
-    LFO_Target.disabled=true;
+    play_Track.disabled    = true;
+    stop_Track.disabled    = true;
+    rec_Start.disabled     = true;
+    rec_Stop.disabled      = true;
+    detune_Audio.disabled  = true;
+    LFO_Target.disabled    = true;
     play_Track.addEventListener('click', function(){
         start_Audio();
     });
     stop_Track.addEventListener('click', stop_Audio);
     detune_Audio.addEventListener('input', function(){
-        source.detune.value = this.value*100;
+        source.detune.value      = this.value*100;
         detune_Audio_Value.value = this.value + " Semitones";
     });
     reverb_Amount.addEventListener('input', function(){
@@ -111,12 +109,12 @@ window.onload = function() {
     LFO_State.onclick = function(){
         if (this.checked){
             LFOGain.connect(current_LFO_State);
-            LFO_Target.disabled=false;
+            LFO_Target.disabled = false;
         }
         else {
             LFOGain.disconnect();
             masterGain.gain.value = 0.5;
-            LFO_Target.disabled=true;
+            LFO_Target.disabled   = true;
         }
     };
     LFO_Target.addEventListener('change', function(){
@@ -149,37 +147,40 @@ window.onload = function() {
 
 function start_Audio() {
     source.start(0);
-    play_Track.disabled=true;
-    file_Chooser.disabled=true;
-    stop_Track.disabled=false;
-    detune_Audio.disabled=false;
+    play_Track.disabled    = true;
+    file_Chooser.disabled  = true;
+    stop_Track.disabled    = false;
+    detune_Audio.disabled  = false;
 }
 
 function stop_Audio() {
     source.stop(0);
     playAudioFile(audio);
-    stop_Track.disabled=true;
-    play_Track.disabled=false;
-    detune_Audio.disabled=true;
-    file_Chooser.disabled=false;
-    detune_Audio.value = 0;
+    stop_Track.disabled      = true;
+    play_Track.disabled      = false;
+    detune_Audio.disabled    = true;
+    file_Chooser.disabled    = false;
+    detune_Audio.value       = 0;
     detune_Audio_Value.value = 0 + " Semitones";
 }
 
 function record_Audio() {
     start_Audio();
-    isRecording=true;
-    lChannel.length=0;
-    rChannel.length=0;
-    time_Recorded=0;
-    rec_Start.disabled=true;
-    rec_Stop.disabled=false;
+    stop_Track.disabled = true;
+    isRecording         = true;
+    lChannel.length     = 0;
+    rChannel.length     = 0;
+    time_Recorded       = 0;
+    rec_Start.disabled  = true;
+    rec_Stop.disabled   = false;
 }
 
 function stop_Record_Audio(){
     stop_Audio();
-    isRecording=false;
-    var left_Buf = mergeBuffers(lChannel, time_Recorded),
+    rec_Start.disabled = false;
+    rec_Stop.disabled  = true;
+    isRecording        = false;
+    var left_Buf  = mergeBuffers(lChannel, time_Recorded),
         right_Buf = mergeBuffers(rChannel, time_Recorded);
 
     interleaved_Buf = interleave(left_Buf, right_Buf);
@@ -190,10 +191,10 @@ function stop_Record_Audio(){
 var reverb = (function() {
     var convolver = context.createConvolver(),
         noiseBuffer = context.createBuffer(2, 0.5 * context.sampleRate, context.sampleRate),
-        left = noiseBuffer.getChannelData(0),
-        right = noiseBuffer.getChannelData(1);
+        left        = noiseBuffer.getChannelData(0),
+        right       = noiseBuffer.getChannelData(1);
     for (var i = 0; i < noiseBuffer.length; i++) {
-        left[i] = Math.random() * 2 - 1;
+        left[i]  = Math.random() * 2 - 1;
         right[i] = Math.random() * 2 - 1;
     }
     convolver.buffer = noiseBuffer;
@@ -214,7 +215,7 @@ function initRec(){
             leftInput,
             rightInput;
         if (isRecording === true) {
-            leftInput = inputBuffer.getChannelData(0);
+            leftInput  = inputBuffer.getChannelData(0);
             rightInput = inputBuffer.getChannelData(1);
             lChannel.push(new Float32Array(leftInput));
             rChannel.push(new Float32Array(rightInput));
@@ -226,9 +227,9 @@ function initRec(){
 }
 
 function interleave(leftC, rightC) {
-    var length = leftC.length + rightC.length,
-        result = new Float32Array(length),
-        index = 0,
+    var length     = leftC.length + rightC.length,
+        result     = new Float32Array(length),
+        index      = 0,
         inputIndex = 0;
 
     while (index < length) {
@@ -301,11 +302,11 @@ function floatTo16BitPCM(output, offset, input) {
 
 function outputWAV(view) {
     var outputBlob = new Blob([view], {type : 'audio/wav'});
-    var url = (window.URL || window.webkitURL).createObjectURL(outputBlob);
-    var link = window.document.createElement('a');
-    link.href = url;
-    link.download = 'output.wav';
-    var click = document.createEvent("Event");
+    var url        = (window.URL || window.webkitURL).createObjectURL(outputBlob);
+    var link       = window.document.createElement('a');
+    link.href      = url;
+    link.download  = 'output.wav';
+    var click      = document.createEvent("Event");
     click.initEvent("click", true, true);
     link.dispatchEvent(click);
 }
