@@ -18,7 +18,9 @@ var context              = new (window.AudioContext || window.webkitAudioContext
     play_Track,
     stop_Track,
     loop_Start,
+    loop_Start_Value     = 0,
     loop_End,
+    loop_End_Value,
     detune_Audio,
     detune_Audio_Value,
     file_Chooser,
@@ -177,6 +179,7 @@ window.onload = function() {
     // showing.
     document.getElementById('loop_Start').addEventListener('input', function(){
         source.loopStart = source.buffer.duration * this.value/100;
+        loop_Start_Value = source.loopStart;
         var start = source.loopStart/60;
         document.querySelector('#loop_Start_Value').value = start.toFixed(2);
     });
@@ -187,6 +190,7 @@ window.onload = function() {
     // showing.
     document.getElementById('loop_End').addEventListener('input', function(){
        source.loopEnd = source.buffer.duration * this.value/100;
+        loop_End_Value = source.loopEnd;
         var end = source.loopEnd/60;
         document.querySelector('#loop_End_Value').value = end.toFixed(2);
     });
@@ -203,6 +207,7 @@ function readAudioFile(files) {
     fileReader.onload = function (e) {
         playAudioFile(e.target.result);
         audio = fileReader.result;
+        loop_End_Value      = null;
         play_Track.disabled = false;
         rec_Start.disabled  = false;
         loop_Start.disabled = false;
@@ -221,12 +226,21 @@ function readAudioFile(files) {
 // is then created by using .connect to send the source output to dryGain and the reverb.
 // The reverb is then connected to wetGain so that it can be faded in using the mix() function
 // and masterGain is connected to the record so that all processing and effects are recorded,
-// not just the source content.
+// not just the source content. if statement checks whether loop_End_Value has been given a value.
+// if it has (for example on first load) it sets it to the end of the buffer. If it has been given
+// a value it assigns that to source.loopEnd. This means it carrys to the loop through stops and starts.
  function playAudioFile(file) {
      source = context.createBufferSource();
      context.decodeAudioData(file, function (buffer) {
          source.buffer = buffer;
          source.loop   = true;
+         source.loopStart = loop_Start_Value;
+         if (null == loop_End_Value){
+             source.loopEnd = source.buffer.duration;
+         }
+         else {
+             source.loopEnd = loop_End_Value;
+         }
          mix(0);
          source.connect(dryGain);
          source.connect(reverb);
