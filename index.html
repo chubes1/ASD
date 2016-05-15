@@ -8,58 +8,72 @@
     <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 </head>
 <body>
-<div class="container">
-    <p id="upload">Upload Audio File:</p>
-    <input  id="audioFileChooser" type="file" onchange="readAudioFile(this.files);" accept=".wav,.mp3">
-    <label for="audioFileChooser" id="audio_Label">Choose File..</label><br><br>
-    <div id="playback">
-        <button id="play">Play</button>
-        <button id="stop">Stop</button>
+<div id="inline">
+    <div class="container">
+        <p id="upload">Upload Audio File:</p>
+        <input  id="audioFileChooser" type="file" onchange="readAudioFile(this.files);" accept=".wav,.mp3">
+        <label for="audioFileChooser" id="audio_Label">Choose File..</label><br><br>
+        <div id="playback">
+            <button id="play">Play</button>
+            <button id="stop">Stop</button>
+            <h3 id="inline" class="looptitle">Loop</h3>
+            <label class="switch" id="inline">
+                <input type="checkbox" id="loop_State">
+                <div class="slider"></div>
+            </label>
+            <div class="loop_Area">
+                <h4>Loop Start</h4>
+                <input type="range" id="loop_Start" class="loop" min="0" max="99" step="0.1" value="0">
+                <output for="loop_Start" id="loop_Start_Value">0</output>
+                <br/>
+                <h4>Loop End</h4>
+                <input type="range" id="loop_End" class="loop" min="1" max="100" step="0.1" value="100">
+                <output for="loop_End" id="loop_End_Value">0</output>
+            </div>
+        </div>
+        <div class="detune_Container">
+            <p>Pitch/Playback shifter</p>
+            <input id="detune_Audio" class="detune_Audio" type="range" min="-12" max="12" step="0.1" value="0">
+            <output for="detune_Audio" id="detune_Audio_Value">0 Semitones</output>
+        </div>
+        <div class="reverb_Container">
+            <p>Reverb</p>
+            <input id="reverb_Amount" class="reverb_Amount" type="range" min="0" max="100" step="1" value="0">
+            <output for="reverb_Amount" id="reverb_Amount_Value">0%</output>
+        </div>
     </div>
-    <div class="detune_Container">
-        <p>Pitch/Playback shifter</p>
-        <input id="detune_Audio" class="detune_Audio" type="range" min="-12" max="12" step="0.1" value="0">
-        <output for="detune_Audio" id="detune_Audio_Value">0 Semitones</output>
+    <div class="LFO_container">
+        <h2 id="inline" class="title">LFO</h2>
+        <label class="switch" id="inline">
+            <input type="checkbox" id="LFO_State">
+            <div class="slider"></div>
+        </label>
+        <div class="LFO_Container">
+            <p>Rate</p>
+            <input id="LFO_Rate" class="LFO_Rate" type="range" min="0.1" max="50" step="0.1" value="0.1">
+            <output for="LFO_Rate" id="LFO_Rate_Hz">0.1Hz</output>
+        </div>
+        <div id="LFO_Wave">
+            <p>Wave Type</p>
+            <select id="LFO_Wave_Type">
+                <option value="sine">Sine</option>
+                <option value="triangle">Triangle</option>
+            </select>
+        </div>
     </div>
-    <div class="reverb_Container">
-        <p>Reverb</p>
-        <input id="reverb_Amount" class="reverb_Amount" type="range" min="0" max="100" step="1" value="0">
-        <output for="reverb_Amount" id="reverb_Amount_Value">0%</output>
+    <div class="record_Container">
+        <h2 class="title">Record</h2>
+        <button id="rec_Start">Record</button>
+        <button id="rec_Stop">Stop Recording</button>
     </div>
 </div>
-<div class="LFO_container">
-    <h2 id="inline" class="title">LFO</h2>
-    <label class="switch" id="inline">
-        <input type="checkbox" id="LFO_State">
-        <div class="slider"></div>
-    </label>
-    <div class="LFO_Container">
-        <p>Rate</p>
-        <input id="LFO_Rate" class="LFO_Rate" type="range" min="0.1" max="50" step="0.1" value="0.1">
-        <output for="LFO_Rate" id="LFO_Rate_Hz">0.1Hz</output>
-    </div>
-    <div id="LFO_Wave">
-        <p>Wave Type</p>
-        <select id="LFO_Wave_Type">
-            <option value="sine">Sine</option>
-            <option value="sawtooth">Saw</option>
-            <option value="triangle">Triangle</option>
-            <option value="square">Square</option>
-        </select>
-    </div>
-    <div id="LFO_Target">
-        <p>Target</p>
-        <select id="LFO_Target_Name">
-            <option value="1">Gain</option>
-            <option value="3">Pitch</option>
-        </select>
-    </div>
+<div class="how_To">
+    <h2 id="inline" class="title">How To Use</h2>
+    <p>1. Using the Choose File.. button upload an audio file.</p>
+    <p>2. Once audio file is uploaded play and record buttons will become available.</p>
+    <p>3. Select whether to just play the audio to process, or record the audio whilst processing.</p>
+    <p>4. When playing or recording pitch slider will become active. Also when when activated the relative stop button will become active as the play/record button deactivates </p>
+    <p>5. Enjoy!</p>
 </div>
-<div class="record_Container">
-    <h2 class="title">Record</h2>
-    <button id="rec_Start">Record</button>
-    <button id="rec_Stop">Stop Recording</button>
-</div>
-
 </body>
 </html>

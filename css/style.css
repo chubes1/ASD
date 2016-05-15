@@ -4,9 +4,40 @@ body {
 
 .container {
     display:inline-block;
-    border: solid 2px black;
-    border-radius: 10px;
+    background: #F0F0F0;
+    border-radius: 5px;
     padding: 20px;
+    margin-bottom: 10px;
+}
+
+.LFO_container {
+    vertical-align: top;
+    display:inline-block;
+    background: #F0F0F0;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.how_To {
+    display: block;
+    float:right;
+    background: #F0F0F0;
+    border-radius: 5px;
+    padding: 20px;
+    width:50%;
+}
+
+.record_Container {
+    display: block;
+    width: 50%;
+    background: #F0F0F0;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+
+#upload {
+    padding: 0 0 20px 20px;
 }
 
 #audioFileChooser {
@@ -34,67 +65,72 @@ body {
 }
 
 #playback {
-    padding:10px;
-}
-
-#detune_Audio {
-    margin-left:20px;
-}
-
-#reverb_Amount {
-    margin-left:20px;
-}
-
-#LFO_Rate {
-    margin-left:20px;
+    padding-left:10px;
+    padding-top: 10px;
 }
 
 #play {
-    margin: 10px;
+    margin-left: 10px;
     border-radius: 2px;
     padding: 10px 20px 10px 20px;
     background-color:red;
-    border: 0px;
+    border: 0;
     color: white;
     transition: background .25s ease-in-out;
     -moz-transition: background .25s ease-in-out;
     -webkit-transition: background .25s ease-in-out;
 }
 
-#play:hover {
+#play:hover, #stop:hover, #rec_Start:hover, #rec_Stop:hover {
     background: black;
 }
 
-#play:disabled {
+#play:disabled, #stop:disabled, #rec_Start:disabled, #rec_Stop:disabled {
     background: grey;
 }
 
 #stop {
-    margin: 10px;
+    margin: 0 10px 0 10px;
     border-radius: 2px;
     padding: 10px 20px 10px 20px;
     background-color:red;
-    border: 0px;
+    border: 0;
     color: white;
     transition: background .25s ease-in-out;
     -moz-transition: background .25s ease-in-out;
     -webkit-transition: background .25s ease-in-out;
 }
 
-#stop:hover {
-    background: black;
+#rec_Start, #rec_Stop {
+    margin: 10px;
+    border-radius: 2px;
+    padding: 10px 20px 10px 20px;
+    background-color:red;
+    border: 0;
+    color: white;
+    transition: background .25s ease-in-out;
+    -moz-transition: background .25s ease-in-out;
+    -webkit-transition: background .25s ease-in-out;
 }
 
-#stop:disabled {
-    background: grey;
+.loop {
+    margin: 10px;
 }
 
-#upload {
-    padding: 0 0 20px 20px;
+.looptitle {
+    vertical-align: middle;
+    margin-top: 10px;
+    margin-bottom: 0;
+    padding-right: 10px;
+}
+
+#detune_Audio, #reverb_Amount, #LFO_Rate {
+    margin-left:20px;
 }
 
 .switch {
     position: relative;
+    vertical-align: middle;
     display: inline-block;
     width: 60px;
     height: 34px;
@@ -106,6 +142,7 @@ body {
 
 .slider {
     position: absolute;
+    vertical-align: middle;
     cursor: pointer;
     border-radius: 2px;
     top: 0;
@@ -148,14 +185,6 @@ input:checked + .slider:before {
     padding: 10px;
 }
 
-.LFO_container {
-    vertical-align: top;
-    display:inline-block;
-    border: solid 2px black;
-    border-radius: 10px;
-    padding: 20px;
-}
-
 #inline {
     display:inline-block;
 }
@@ -164,52 +193,4 @@ input:checked + .slider:before {
     vertical-align: top;
     margin:0;
     padding-right: 50px;
-}
-
-#rec_Start {
-    margin: 10px;
-    border-radius: 2px;
-    padding: 10px 20px 10px 20px;
-    background-color:red;
-    border: 0px;
-    color: white;
-    transition: background .25s ease-in-out;
-    -moz-transition: background .25s ease-in-out;
-    -webkit-transition: background .25s ease-in-out;
-}
-
-#rec_Start:hover {
-    background: black;
-}
-
-#rec_Start:disabled {
-    background: grey;
-}
-
-#rec_Stop {
-    margin: 10px;
-    border-radius: 2px;
-    padding: 10px 20px 10px 20px;
-    background-color:red;
-    border: 0px;
-    color: white;
-    transition: background .25s ease-in-out;
-    -moz-transition: background .25s ease-in-out;
-    -webkit-transition: background .25s ease-in-out;
-}
-
-#rec_Stop:hover {
-    background: black;
-}
-
-.record_Container {
-    position: absolute;
-    margin-top: 5px;
-    border: solid 2px black;
-    border-radius: 10px;
-    padding: 20px;
-}
-
-#rec_Stop:disabled {
-    background: grey;
 }
