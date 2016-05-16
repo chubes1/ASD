@@ -177,7 +177,7 @@ window.onload = function() {
     // source.buffer.duration to get whole buffer duration and then multiplying it by a percentage.
     // .toFixed(2) sets the output to fixed 2 decimal places, to stop numbers with extended decimals
     // showing.
-    document.getElementById('loop_Start').addEventListener('input', function(){
+    loop_Start.addEventListener('input', function(){
         source.loopStart = source.buffer.duration * this.value/100;
         loop_Start_Value = source.loopStart;
         var start = source.loopStart/60;
@@ -188,7 +188,7 @@ window.onload = function() {
     // source.buffer.duration to get whole buffer duration and then multiplying it by a percentage.
     // .toFixed(2) sets the output to fixed 2 decimal places, to stop numbers with extended decimals
     // showing.
-    document.getElementById('loop_End').addEventListener('input', function(){
+    loop_End.addEventListener('input', function(){
        source.loopEnd = source.buffer.duration * this.value/100;
         loop_End_Value = source.loopEnd;
         var end = source.loopEnd/60;
@@ -212,6 +212,10 @@ function readAudioFile(files) {
         rec_Start.disabled  = false;
         loop_Start.disabled = false;
         loop_End.disabled   = false;
+        loop_End.value      = 100;
+        loop_Start.value    = 0;
+        document.querySelector('#loop_Start_Value').value = 0;
+        document.querySelector('#loop_End_Value').value = 0;
         console.log(("Filename: '" + files[0].name + "'"), ( "(" + ((Math.floor(files[0].size / 1024 / 1024 * 100)) / 100) + " MB)" ));
     }
 }
